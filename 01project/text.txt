@@ -1,0 +1,4 @@
+Date - 1/24/2024 | IP - ::1 | Method - GET | Route - /api/users/1000
+Date - 1/24/2024 | IP - ::1 | Method - DELETE | Route - /api/users/1000
+Date - 1/24/2024 | IP - ::1 | Method - GET | Route - /api/users
+Date - 1/24/2024 | IP - ::1 | Method - GET | Route - /api/users
