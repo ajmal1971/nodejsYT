@@ -1,13 +1,14 @@
 const express = require('express');
-const mongoose  = require('mongoose');
+const mongoose = require('mongoose');
+const fs = require('fs');
 
 const app = express();
 const PORT = 8000;
 
 // Connect to DB
 mongoose.connect('mongodb://127.0.0.1:27017/01project')
-.then(() => console.log('MongoDB Connected!'))
-.catch((err) => console.log('Mongo Error:: ', err));
+  .then(() => console.log('MongoDB Connected!'))
+  .catch((err) => console.log('Mongo Error:: ', err));
 
 
 //Define Schema
@@ -47,7 +48,8 @@ app.use((req, res, next) => {
 });
 
 // Response as HTML (Server Side Rendering - SSR)
-app.get('/users', (req, res) => {
+app.get('/users', async (req, res) => {
+  const users = await User.find({});
   const html = `
         <table border cellpadding='5'>
             <thead>
@@ -64,7 +66,7 @@ app.get('/users', (req, res) => {
     `
                         <tr>
                             <th>${index + 1}</th>
-                            <th>${user.first_name} ${user.last_name}</th>
+                            <th>${user.firstName} ${user.lastName}</th>
                             <th>${user.email}</th>
                             <th>${user.gender}</th>
                         </tr>
@@ -82,62 +84,50 @@ app.get('/users', (req, res) => {
 // All Users or Create User
 app
   .route('/api/users')
-  .get((req, res) => {
+  .get(async (req, res) => {
     // Always start header name with X for custom header
-    res.setHeader('X-Name', 'Ajmal Hossain')
+    res.setHeader('X-Name', 'Ajmal Hossain');
+
+    const users = await User.find({});
     return res.json(users);
   })
   .post(async (req, res) => {
     const body = req.body;
-    await User.create({
-      firstName: body.first_name,
-      lastName: last_name,
-      
-    });
+    const result = await User.create(
+      {
+        firstName: body.first_name,
+        lastName: body.last_name,
+        email: body.email,
+        gender: body.gender
+      }
+    );
+
+    return res.status(201).json({ msg: 'Successfull!', user: result });
   });
 
 // User by Id or Update or Delete user
 app
   .route('/api/users/:id')
-  .get((req, res) => {
-    const id = req.params.id;
-    const user = users.find(user => user.id === Number(id));
+  .get(async (req, res) => {
+    const user = await User.findById(req.params.id);
     return res.json(user);
   })
-  .patch((req, res) => {
-    const id = req.params.id;
+  .patch(async (req, res) => {
     const body = req.body;
-
-    const user = users.find(user => user.id === Number(id));
-    user.first_name = body.first_name;
-    user.last_name = body.last_name;
-    user.email = body.email;
-    user.gender = body.gender;
-
-    fs.writeFile('./MOCK_DATA.json', JSON.stringify(users), (err, data) => {
-      if (err) {
-        return res.json({ status: 'Failed!', id: id });
-      } else {
-        return res.json({ status: 'Success', id: id });
-      }
-    });
-  })
-  .delete((req, res) => {
-    const id = req.params.id;
-    const rowIndex = users.findIndex(user => user.id === Number(id));
-
-    if (rowIndex === -1) {
-      return res.json({ status: 'User Not Found!', id: id });
-    } else {
-      users.splice(rowIndex, 1);
-      fs.writeFile('./MOCK_DATA.json', JSON.stringify(users), (err, data) => {
-        if (err) {
-          return res.json({ status: 'Failed to delete!', id: id });
-        } else {
-          return res.json({ status: 'Success', id: id });
-        }
-      });
+    const updatedRow = {
+      firstName: body.first_name,
+      lastName: body.last_name,
+      email: body.email,
+      gender: body.gender
     }
+    await User.findByIdAndUpdate(req.params.id, updatedRow)
+      .then(result => {
+        return res.json({ msg: 'Successfull' });
+      });
+  })
+  .delete(async (req, res) => {
+    await User.findByIdAndDelete(req.params.id)
+      .then(result => { return res.json({ msg: 'Successfull' }) });
   });
 
 app.listen(PORT, () => console.log(`Server is listening on PORT: ${PORT}`))
