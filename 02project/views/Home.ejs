@@ -1,11 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page</title>
 </head>
 <body>
-    <h1>Hey From Ejs Home Page</h1>
+    <h1>URL Shortner</h1>
+    <% if (locals.id) { %>
+        <p>Short URL Generated: <span style="color: navy; font-weight: bold; font-size: 13px;"><a href="http://localhost:8001/<%= id %>" target="_blank">http://localhost:8001/<%= id %></a></span></p>
+    <% } %>
+    <div style="margin-bottom: 15px;">
+        <form method="post" action="/url">
+            <label>Enter Original URL</label>
+            <input type="text" name="url" placeholder="https://example.com"/>
+            <button type="submit">Generate</button>
+            <button id="refreshBtn" type="button">Refresh</button>
+        </form>
+    </div>
+
+    <% if (locals.urls) { %>
+        <div>
+            <table border="1" cellpadding="5" >
+                <thead>
+                    <tr>
+                        <th>SL#</th>
+                        <th>Short ID</th>
+                        <th>Short URL</th>
+                        <th>Redirect</th>
+                        <th>Clicks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tbody>
+                        <% urls.forEach((url, index) => { %>
+                            <tr>
+                                <td><%= index + 1 %></td>
+                                <td><%= url.shortId %></td>
+                                <td><a href="http://localhost:8001/<%= url.shortId %>" target="_blank">http://localhost:8001/<%= url.shortId %></a></td>
+                                <td><%= url.redirectUrl %></td>
+                                <td><%= url.visitiHistory.length %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </tbody>
+            </table>
+        </div>
+    <% } %>
+
+    <script>
+        document.getElementById('refreshBtn').addEventListener('click', function() {
+            window.location.href = '/';  // Replace '/' with your desired route
+        });
+    </script>
 </body>
 </html>

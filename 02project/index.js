@@ -2,6 +2,7 @@ const express = require("express");
 const connectMongoDB = require("./connection");
 const urlRouter = require("./routes/Url");
 const userRouter = require("./routes/User");
+const staticRoute = require("./routes/staticRoute");
 const URL = require("./models/Url");
 const path = require("path");
 
@@ -20,13 +21,15 @@ app.set("views", path.resolve("./views"));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-app.get("/test", (req, res) => {
-  return res.render("home");
+//Routes
+app.use(function (req, res, next) {
+  if (req.path === "/favicon.ico") return res.end();
+  else next();
 });
 
-//Routes
 app.use("/url", urlRouter);
 app.use("/user", userRouter);
+app.use("/", staticRoute);
 
 app.get("/:shortId", async (req, res) => {
   const shortId = req.params.shortId;

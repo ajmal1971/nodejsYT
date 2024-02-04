@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+    </style>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Signin</title>
+  </head>
+  <body>
+    <h1>Signin</h1>
+    <form action="/user/login" method="post">
+      <table>
+        <tr>
+          <td>
+            <label>Email</label>
+          </td>
+          <td>
+            <input
+              type="email"
+              required
+              name="email"
+              placeholder="Enter Your Email"
+            />
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <label>Password</label>
+          </td>
+          <td>
+            <input
+              type="password"
+              required
+              name="password"
+              placeholder="Enter Your Password"
+            />
+          </td>
+        </tr>
+
+        <tr>
+          <td colspan="2">
+            <button type="submit" style="width: 100%">Signin</button>
+          </td>
+        </tr>
+      </table>
+    </form>
+  </body>
+</html>

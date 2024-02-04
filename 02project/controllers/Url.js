@@ -14,7 +14,9 @@ const handCreateShortUrl = async (req, res) => {
         visitiHistory: []
     });
 
-    return res.status(201).json({ id: shortId });
+    return res.render('home', {
+        id: shortId
+    });
 }
 
 const handGetAnalytics = async(req, res) => {
