@@ -6,7 +6,7 @@ const staticRoute = require("./routes/staticRoute");
 const URL = require("./models/Url");
 const path = require("path");
 const cookieParser = require("cookie-parser");
-const { validateUserAuthentication } = require("./middlewares/auth");
+const { validateUserAuthentication, checkAuth } = require("./middlewares/auth");
 
 const app = express();
 const PORT = 8001;
@@ -32,7 +32,7 @@ app.use(function (req, res, next) {
 
 app.use("/url", validateUserAuthentication, urlRouter);
 app.use("/user", userRouter);
-app.use("/", staticRoute);
+app.use("/", checkAuth, staticRoute);
 
 app.get("/:shortId", async (req, res) => {
   const shortId = req.params.shortId;

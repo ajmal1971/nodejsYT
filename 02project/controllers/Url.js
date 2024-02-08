@@ -11,7 +11,8 @@ const handCreateShortUrl = async (req, res) => {
     await URL.create({
         shortId: shortId,
         redirectUrl: body.url,
-        visitiHistory: []
+        visitiHistory: [],
+        createdBy: req.user._id
     });
 
     return res.render('home', {

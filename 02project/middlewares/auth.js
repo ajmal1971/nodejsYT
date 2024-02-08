@@ -13,6 +13,14 @@ const validateUserAuthentication = async (req, res, next) => {
   next();
 };
 
+const checkAuth = async (req, res, next) => {
+  const sessionId = req.cookies.session_id;
+  const user = getUser(sessionId);
+  req.user = user;
+  next();
+}
+
 module.exports = {
   validateUserAuthentication,
+  checkAuth
 };
