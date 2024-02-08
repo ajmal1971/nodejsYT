@@ -5,6 +5,8 @@ const userRouter = require("./routes/User");
 const staticRoute = require("./routes/staticRoute");
 const URL = require("./models/Url");
 const path = require("path");
+const cookieParser = require("cookie-parser");
+const { validateUserAuthentication } = require("./middlewares/auth");
 
 const app = express();
 const PORT = 8001;
@@ -20,6 +22,7 @@ app.set("views", path.resolve("./views"));
 //Middlewares
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(cookieParser());
 
 //Routes
 app.use(function (req, res, next) {
@@ -27,7 +30,7 @@ app.use(function (req, res, next) {
   else next();
 });
 
-app.use("/url", urlRouter);
+app.use("/url", validateUserAuthentication, urlRouter);
 app.use("/user", userRouter);
 app.use("/", staticRoute);
 

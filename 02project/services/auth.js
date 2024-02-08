@@ -5,7 +5,7 @@ const setUser = (sessionId, user) => {
 };
 
 const getUser = (sessionId) => {
-  sessionIdToUserMap.get(sessionId);
+  return sessionIdToUserMap.get(sessionId);
 };
 
 module.exports = {
