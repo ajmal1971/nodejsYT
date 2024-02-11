@@ -1,7 +1,7 @@
 const User = require("../models/User");
 const { v4: uuidv4 } = require("uuid");
 const { setUser } = require("../services/auth");
-const { signUser, verifyUser } = require("../services/auth_stateless");
+const { signUser } = require("../services/auth_stateless");
 
 const handleSignup = async (req, res) => {
   const { name, email, password } = req.body;
@@ -34,10 +34,9 @@ const handleSigninJWT = async (req, res) => {
     return res.redirect("/login");
   }
 
-  const sessionId = uuidv4();
-  setUser(sessionId, user);
-  res.cookie("session_id", sessionId);
+  const token = signUser(user);
+  res.cookie("token", token);
   return res.redirect("/");
 };
 
-module.exports = { handleSignup, handleSignin };
+module.exports = { handleSignup, handleSignin, handleSigninJWT };

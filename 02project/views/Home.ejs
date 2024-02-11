@@ -56,8 +56,9 @@
     <% } %>
 
     <script>
+        console.log(window.location.pathname);
         document.getElementById('refreshBtn').addEventListener('click', function() {
-            window.location.href = '/';  // Replace '/' with your desired route
+            window.location.href = window.location.pathname;
         });
     </script>
 </body>
