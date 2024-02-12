@@ -19,7 +19,7 @@ app.set("views", path.resolve("./views"));
 //middlewares
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(checkAuthCookie);
+app.use(checkAuthCookie("token"));
 
 app.get("/", (req, res) => {
   return res.render("home", {
