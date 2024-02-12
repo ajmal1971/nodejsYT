@@ -1,5 +1,6 @@
 const { createHmac, randomBytes } = require("crypto");
 const { Schema, model, random } = require("mongoose");
+const { createToken } = require("../services/auth");
 
 const userSchema = new Schema(
   {
@@ -53,7 +54,8 @@ userSchema.static("authenticateUser", async function (email, password) {
   const newHash = getHash(user.salt, password);
   if (user.password !== newHash) throw new Error("Authentication failed!");
 
-  return user;
+  const token = createToken(user);
+  return token;
 });
 
 const getHash = (salt, value) => {
