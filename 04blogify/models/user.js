@@ -1,5 +1,5 @@
 const { createHmac, randomBytes } = require("crypto");
-const { Schema, model, random } = require("mongoose");
+const { Schema, model } = require("mongoose");
 const { createToken } = require("../services/auth");
 
 const userSchema = new Schema(

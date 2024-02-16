@@ -1,9 +1,11 @@
 const express = require("express");
 const path = require("path");
 const userRoutes = require("./routes/user");
+const blogRoutes = require("./routes/blog");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const { checkAuthCookie } = require("./middleware/auth");
+const Blog = require("./models/blog");
 
 const app = express();
 const PORT = 8000;
@@ -20,13 +22,17 @@ app.set("views", path.resolve("./views"));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(checkAuthCookie("token"));
+app.use(express.static("./public"));
 
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
+  const blogs = await Blog.find({});
   return res.render("home", {
     user: req.user,
+    blogs: blogs,
   });
 });
 
 app.use("/user", userRoutes);
+app.use("/blog", blogRoutes);
 
 app.listen(PORT, () => console.log(`Server is listening on PORT: ${PORT}`));
